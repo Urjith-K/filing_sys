@@ -11,7 +11,7 @@ const Home: NextPage = () => {
       <div className="hero min-h-[60vh] bg-base-200">
         <div className="hero-content text-center">
           <div className="max-w-2xl">
-            <h1 className="text-6xl font-bold">The Public's Ledger</h1>
+            <h1 className="text-6xl font-bold">The Public&aposs Ledger</h1>
             <p className="py-6 text-2xl">
               Transparency. Accountability. Justice.
               <br />

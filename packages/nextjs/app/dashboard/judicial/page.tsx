@@ -149,7 +149,7 @@ const JudicialDashboard: NextPage = () => {
                 <th>Location</th>
                 <th>Filed By</th>
                 <th>Assigned Officer</th>
-                <th>Officer's Final Report</th>
+                <th>Officer&aposs Final Report</th>
                 <th>Actions</th>
               </tr>
             </thead>
