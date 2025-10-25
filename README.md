@@ -1,80 +1,76 @@
-# 🏗 Scaffold-ETH 2
+# The Public's Ledger
 
-<h4 align="center">
-  <a href="https://docs.scaffoldeth.io">Documentation</a> |
-  <a href="https://scaffoldeth.io">Website</a>
-</h4>
+**A decentralized accountability layer for public safety.**
 
-🧪 An open-source, up-to-date toolkit for building decentralized applications (dapps) on the Ethereum blockchain. It's designed to make it easier for developers to create and deploy smart contracts and build user interfaces that interact with those contracts.
+This project is a submission for "The Residency" hackathon, built on the theme: **"Build for Real-World Impact using Web3"**.
 
-⚙️ Built using NextJS, RainbowKit, Foundry, Wagmi, Viem, and Typescript.
+## 1. The Problem
 
-- ✅ **Contract Hot Reload**: Your frontend auto-adapts to your smart contract as you edit it.
-- 🪝 **[Custom hooks](https://docs.scaffoldeth.io/hooks/)**: Collection of React hooks wrapper around [wagmi](https://wagmi.sh/) to simplify interactions with smart contracts with typescript autocompletion.
-- 🧱 [**Components**](https://docs.scaffoldeth.io/components/): Collection of common web3 components to quickly build your frontend.
-- 🔥 **Burner Wallet & Local Faucet**: Quickly test your application with a burner wallet and local faucet.
-- 🔐 **Integration with Wallet Providers**: Connect to different wallet providers and interact with the Ethereum network.
+In many public safety systems, incident reports (like missing persons or public complaints) are filed into a "black box." Reports can be lost, de-prioritized, or tampered with. For the public, there is no transparency, which leads to a lack of accountability.
 
-![Debug Contracts tab](https://github.com/scaffold-eth/scaffold-eth-2/assets/55535804/b237af0c-5027-4849-a5c1-2e31495cccb1)
+## 2. Our Solution: A "Glass Box"
 
-## Requirements
+We built **The Public's Ledger**: a decentralized application that acts as a permanent, immutable, and publicly verifiable notary for incident reports.
 
-Before you begin, you need to install the following tools:
+Instead of replacing the current system, we add a transparent accountability layer on top of it. When a citizen files a report, it is logged on-chain where it **cannot be deleted or altered**. The entire lifecycle of the case—from "Filed" to "Acknowledged" to "Verified & Closed"—is tracked publicly, creating a "flight tracker for justice" that ensures no report ever just "disappears."
 
-- [Node (>= v20.18.3)](https://nodejs.org/en/download/)
-- Yarn ([v1](https://classic.yarnpkg.com/en/docs/install/) or [v2+](https://yarnpkg.com/getting-started/install))
-- [Git](https://git-scm.com/downloads)
+## 3. Core Features
 
-## Quickstart
+Our dApp is a multi-page application with 5 distinct roles and dashboards:
 
-To get started with Scaffold-ETH 2, follow the steps below:
+1.  **Public Dashboard (`/cases`):** A read-only portal for journalists, NGOs, and the public. It shows a list of *all* cases and their complete, un-editable timeline of updates.
+2.  **Citizen Dashboard (`/dashboard/citizen`):** A secure portal for citizens to file new reports and track the real-time status of *their own* submitted cases.
+3.  **Police Dashboard (`/dashboard/police`):** A protected work queue for whitelisted police addresses. Officers can `Acknowledge` new cases, `Add Progress Update`s (which are logged on-chain), and `Close Case`s.
+4.  **Judicial Dashboard (`/dashboard/judicial`):** A protected portal for a third-party verifier (e.g., a judge or NGO). They see a queue of "Closed" cases and must provide the final `Verify Closure`, ensuring a separation of powers.
+5.  **Governor Portal (`/admin`):** A high-security admin panel for the contract owner to grant and revoke `Police` and `Judicial` roles, managing the list of trusted authorities.
 
-1. Install dependencies if it was skipped in CLI:
+## 4. Tech Stack
 
-```
-cd my-dapp-example
-yarn install
-```
+* **Smart Contract:** Solidity, Foundry
+* **Frontend:** Next.js (App Router), TypeScript, Tailwind CSS, DaisyUI
+* **Core Framework:** `scaffold-eth 2`
 
-2. Run a local network in the first terminal:
+## 5. How to Test (Step-by-Step)
 
-```
-yarn chain
-```
+This application has 5 roles. Here is how to test the full flow:
 
-This command starts a local Ethereum network using Foundry. The network runs on your local machine and can be used for testing and development. You can customize the network configuration in `packages/foundry/foundry.toml`.
+### IMPORTANT: Setting the Governor (Admin)
 
-3. On a second terminal, deploy the test contract:
+For this hackathon demo, the **Governor** address is hardcoded in the smart contract.
 
-```
-yarn deploy
-```
+1.  To test the admin panel, you **must** change this address to your own.
+2.  Open `packages/foundry/contracts/YourContract.sol`.
+3.  Go to the `constructor()` (around line 77).
+4.  Change the hardcoded address to your own wallet address:
+    ```solidity
+    constructor() {
+        // HACKATHON FIX: Change this to your address
+        governor = 0xYOUR_ADDRESS_HERE;
+    }
+    ```
+5.  **Re-deploy the contract:**
+    ```bash
+    yarn deploy
+    ```
 
-This command deploys a test smart contract to the local network. The contract is located in `packages/foundry/contracts` and can be modified to suit your needs. The `yarn deploy` command uses the deploy script located in `packages/foundry/script` to deploy the contract to the network. You can also customize the deploy script.
+### Testing the Full Flow
 
-4. On a third terminal, start your NextJS app:
+1.  **Connect as Governor:** Connect the wallet you just hardcoded. Go to the homepage and click **[Go to Governor/Admin Portal]**.
+2.  **Grant Roles:** On the Admin page, grant the `Police` role and `Judicial` role to two *different* test wallets.
+3.  **Connect as Citizen:** Connect with any *normal* wallet (that is not an admin). Go to the **[Citizen Dashboard]** and file a new report. You will see it appear in your "My Filed Complaints" list.
+4.  **Connect as Police:** Connect with the wallet you granted the `Police` role. Go to the **[Police Portal]**.
+    * You will see the new case.
+    * Click `Acknowledge`.
+    * Add a progress update using the `Add Update` button.
+    * Finally, `Close Case`.
+5.  **Connect as Judicial:** Connect with the wallet you granted the `Judicial` role. Go to the **[Judicial Portal]**.
+    * You will see the "Closed" case in your verification queue.
+    * Add a final memo and click `Verify & Close`.
+6.  **View as Public:** Go to the **[View All Cases (Public)]** page. Click "View Details" on the case you just processed. You will see its full, transparent timeline, from filing to final verification.
 
-```
-yarn start
-```
+## 6. The "Vision": Future Work
 
-Visit your app on: `http://localhost:3000`. You can interact with your smart contract using the `Debug Contracts` page. You can tweak the app config in `packages/nextjs/scaffold.config.ts`.
+Given the 6-hour time limit, we used a standard "Connect Wallet" flow. Our next step is to make this app accessible to **"normal people"** by:
 
-Run smart contract test with `yarn foundry:test`
-
-- Edit your smart contracts in `packages/foundry/contracts`
-- Edit your frontend homepage at `packages/nextjs/app/page.tsx`. For guidance on [routing](https://nextjs.org/docs/app/building-your-application/routing/defining-routes) and configuring [pages/layouts](https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts) checkout the Next.js documentation.
-- Edit your deployment scripts in `packages/foundry/script`
-
-
-## Documentation
-
-Visit our [docs](https://docs.scaffoldeth.io) to learn how to start building with Scaffold-ETH 2.
-
-To know more about its features, check out our [website](https://scaffoldeth.io).
-
-## Contributing to Scaffold-ETH 2
-
-We welcome contributions to Scaffold-ETH 2!
-
-Please see [CONTRIBUTING.MD](https://github.com/scaffold-eth/scaffold-eth-2/blob/main/CONTRIBUTING.md) for more information and guidelines for contributing to Scaffold-ETH 2.
+* **Invisible Wallets:** Integrating **Privy** to let citizens log in with a simple phone/OTP, which invisibly creates and manages a wallet for them.
+* **Gasless Transactions:** Using **Biconomy** to sponsor the gas fees for filing reports, removing the final barrier to entry for users in crisis.
