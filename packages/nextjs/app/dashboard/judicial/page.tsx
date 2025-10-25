@@ -3,11 +3,7 @@
 import { useState } from "react";
 import type { NextPage } from "next";
 import { Address } from "~~/components/scaffold-eth";
-import {
-  useScaffoldReadContract,
-  useScaffoldWriteContract,
-  useScaffoldEventHistory,
-} from "~~/hooks/scaffold-eth";
+import { useScaffoldEventHistory, useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 
 // --- Helper to convert status enum to text ---
 const getStatusString = (status: number) => {
@@ -40,8 +36,7 @@ const JudicialCaseRow = ({ caseId }: { caseId: bigint }) => {
   });
 
   // Get hooks for the judicial action
-  const { writeContractAsync: verifyClosure, isPending: isVerifying } =
-    useScaffoldWriteContract("YourContract");
+  const { writeContractAsync: verifyClosure, isPending: isVerifying } = useScaffoldWriteContract("YourContract");
 
   if (isLoading || !complaint) {
     return (
@@ -95,9 +90,7 @@ const JudicialCaseRow = ({ caseId }: { caseId: bigint }) => {
       </td>
       {/* Police's Final Report */}
       <td>
-        {complaint.publicUpdates.length > 0
-          ? complaint.publicUpdates[complaint.publicUpdates.length - 1]
-          : "N/A"}
+        {complaint.publicUpdates.length > 0 ? complaint.publicUpdates[complaint.publicUpdates.length - 1] : "N/A"}
       </td>
 
       {/* --- Actions Column --- */}
@@ -110,11 +103,7 @@ const JudicialCaseRow = ({ caseId }: { caseId: bigint }) => {
             value={verificationMessage}
             onChange={e => setVerificationMessage(e.target.value)}
           />
-          <button
-            className="btn btn-sm btn-success"
-            onClick={handleVerify}
-            disabled={isVerifying}
-          >
+          <button className="btn btn-sm btn-success" onClick={handleVerify} disabled={isVerifying}>
             {isVerifying ? <span className="loading loading-spinner"></span> : "Verify & Close"}
           </button>
         </div>
@@ -167,14 +156,13 @@ const JudicialDashboard: NextPage = () => {
             <tbody>
               {uniqueEvents.length > 0 ? (
                 uniqueEvents.map(event => (
-                  <JudicialCaseRow
-                    key={event.args.caseId.toString()}
-                    caseId={event.args.caseId}
-                  />
+                  <JudicialCaseRow key={event.args.caseId.toString()} caseId={event.args.caseId} />
                 ))
               ) : (
                 <tr>
-                  <td colSpan={7} className="text-center">No cases pending verification.</td>
+                  <td colSpan={7} className="text-center">
+                    No cases pending verification.
+                  </td>
                 </tr>
               )}
             </tbody>

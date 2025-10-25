@@ -1,13 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import type { NextPage } from "next";
 import { format } from "date-fns";
+import type { NextPage } from "next";
 import { Address } from "~~/components/scaffold-eth";
-import {
-  useScaffoldReadContract,
-  useScaffoldEventHistory,
-} from "~~/hooks/scaffold-eth";
+import { useScaffoldEventHistory, useScaffoldReadContract } from "~~/hooks/scaffold-eth";
 
 // --- Helper to convert status enum to text ---
 const getStatusString = (status: number) => {
@@ -42,21 +39,48 @@ const CaseDetailsModal = ({ caseId, onClose }: { caseId: bigint; onClose: () => 
     <dialog id="case_details_modal" className="modal modal-open">
       <div className="modal-box w-11/12 max-w-4xl">
         <h3 className="font-bold text-2xl">Case #{caseId.toString()} Details</h3>
-        
+
         {isLoading || !complaint ? (
           <p>Loading case details...</p>
         ) : (
           <div className="py-4">
             {/* --- Summary --- */}
             <div className="grid grid-cols-2 gap-4 mb-4">
-              <div><strong>Status:</strong> <span className={`badge ${complaint.status === 0 ? "badge-warning" : complaint.status === 3 ? "badge-success" : "badge-info"}`}>{getStatusString(complaint.status)}</span></div>
-              <div><strong>Location:</strong> {complaint.location}</div>
-              <div><strong>Filed By:</strong> <Address address={complaint.citizenReporter} /></div>
-              <div><strong>Filed On:</strong> {format(new Date(Number(complaint.timestampFiled) * 1000), "PPpp")}</div>
-              <div><strong>Assigned Officer:</strong> {complaint.assignedPolice !== "0x0000000000000000000000000000000000000000" ? <Address address={complaint.assignedPolice} /> : "N/A"}</div>
-              <div><strong>Verified By:</strong> {complaint.verifyingJudicial !== "0x0000000000000000000000000000000000000000" ? <Address address={complaint.verifyingJudicial} /> : "N/A"}</div>
+              <div>
+                <strong>Status:</strong>{" "}
+                <span
+                  className={`badge ${complaint.status === 0 ? "badge-warning" : complaint.status === 3 ? "badge-success" : "badge-info"}`}
+                >
+                  {getStatusString(complaint.status)}
+                </span>
+              </div>
+              <div>
+                <strong>Location:</strong> {complaint.location}
+              </div>
+              <div>
+                <strong>Filed By:</strong> <Address address={complaint.citizenReporter} />
+              </div>
+              <div>
+                <strong>Filed On:</strong> {format(new Date(Number(complaint.timestampFiled) * 1000), "PPpp")}
+              </div>
+              <div>
+                <strong>Assigned Officer:</strong>{" "}
+                {complaint.assignedPolice !== "0x0000000000000000000000000000000000000000" ? (
+                  <Address address={complaint.assignedPolice} />
+                ) : (
+                  "N/A"
+                )}
+              </div>
+              <div>
+                <strong>Verified By:</strong>{" "}
+                {complaint.verifyingJudicial !== "0x0000000000000000000000000000000000000000" ? (
+                  <Address address={complaint.verifyingJudicial} />
+                ) : (
+                  "N/A"
+                )}
+              </div>
             </div>
-            
+
             {/* --- Initial Report --- */}
             <div className="mb-6">
               <h4 className="font-bold text-lg">Initial Report Details:</h4>
@@ -77,7 +101,7 @@ const CaseDetailsModal = ({ caseId, onClose }: { caseId: bigint; onClose: () => 
                     </span>
                   </div>
                 </li>
-                
+
                 {/* Map over all the public updates */}
                 {complaint.publicUpdates.map((update, index) => (
                   <li key={index} className="step step-primary">
@@ -101,13 +125,14 @@ const CaseDetailsModal = ({ caseId, onClose }: { caseId: bigint; onClose: () => 
         )}
 
         <div className="modal-action">
-          <button className="btn" onClick={onClose}>Close</button>
+          <button className="btn" onClick={onClose}>
+            Close
+          </button>
         </div>
       </div>
     </dialog>
   );
 };
-
 
 /**
  * --- Component 2: A single row in the "All Cases" list ---
@@ -134,14 +159,18 @@ const PublicCaseRow = ({ caseId, onSelectCase }: { caseId: bigint; onSelectCase:
 
   return (
     <tr>
-      <td><strong>{complaint.id.toString()}</strong></td>
+      <td>
+        <strong>{complaint.id.toString()}</strong>
+      </td>
       <td>
         <span className={`badge ${status === 0 ? "badge-warning" : status === 3 ? "badge-success" : "badge-info"}`}>
           {statusString}
         </span>
       </td>
       <td>{complaint.location}</td>
-      <td><Address address={complaint.citizenReporter} /></td>
+      <td>
+        <Address address={complaint.citizenReporter} />
+      </td>
       <td>{format(new Date(Number(complaint.timestampFiled) * 1000), "PP")}</td>
       <td>
         <button className="btn btn-sm btn-outline" onClick={() => onSelectCase(caseId)}>
@@ -151,7 +180,6 @@ const PublicCaseRow = ({ caseId, onSelectCase }: { caseId: bigint; onSelectCase:
     </tr>
   );
 };
-
 
 /**
  * --- MAIN PAGE ---
@@ -206,7 +234,9 @@ const PublicCasesPage: NextPage = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={6} className="text-center">No cases have been filed yet.</td>
+                  <td colSpan={6} className="text-center">
+                    No cases have been filed yet.
+                  </td>
                 </tr>
               )}
             </tbody>
@@ -215,12 +245,7 @@ const PublicCasesPage: NextPage = () => {
       )}
 
       {/* --- The Modal --- */}
-      {selectedCaseId !== null && (
-        <CaseDetailsModal 
-          caseId={selectedCaseId} 
-          onClose={() => setSelectedCaseId(null)} 
-        />
-      )}
+      {selectedCaseId !== null && <CaseDetailsModal caseId={selectedCaseId} onClose={() => setSelectedCaseId(null)} />}
     </div>
   );
 };

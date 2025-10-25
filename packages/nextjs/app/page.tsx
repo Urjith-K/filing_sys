@@ -1,7 +1,7 @@
 "use client";
 
-import type { NextPage } from "next";
 import Link from "next/link";
+import type { NextPage } from "next";
 import { RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 
 const Home: NextPage = () => {
@@ -16,11 +16,10 @@ const Home: NextPage = () => {
               Transparency. Accountability. Justice.
               <br />
               <span className="text-xl opacity-70">
-                A decentralized accountability layer for public safety.
-                Your voice, permanently on-chain.
+                A decentralized accountability layer for public safety. Your voice, permanently on-chain.
               </span>
             </p>
-            
+
             {/* This is the main "Connect Wallet" button from scaffold-eth */}
             <RainbowKitCustomConnectButton />
           </div>
@@ -34,7 +33,7 @@ const Home: NextPage = () => {
             <div className="card-body">
               <h2 className="card-title">Hackathon Demo Portals</h2>
               <p>Connect your wallet, then select your role to continue.</p>
-              
+
               <div className="flex flex-col gap-4 mt-4">
                 <Link href="/dashboard/citizen" className="btn btn-primary">
                   Go to Citizen Dashboard

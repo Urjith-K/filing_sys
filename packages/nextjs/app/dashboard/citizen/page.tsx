@@ -4,10 +4,7 @@ import { useState } from "react";
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
 import { Address } from "~~/components/scaffold-eth";
-import {
-  useScaffoldReadContract,
-  useScaffoldWriteContract,
-} from "~~/hooks/scaffold-eth";
+import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 
 // --- Helper to convert status enum to text ---
 const getStatusString = (status: number) => {
@@ -54,8 +51,8 @@ const FileComplaintForm = () => {
       <div className="card-body">
         <h2 className="card-title text-3xl">File a New Secure Report</h2>
         <p className="text-base-content/70">
-          This report will be submitted to the blockchain. It is permanent and cannot be
-          edited or deleted. Please provide clear and accurate information.
+          This report will be submitted to the blockchain. It is permanent and cannot be edited or deleted. Please
+          provide clear and accurate information.
         </p>
 
         <div className="divider"></div>
@@ -76,9 +73,7 @@ const FileComplaintForm = () => {
               onChange={e => setLocation(e.target.value)}
             />
             <label className="label">
-              <span className="label-text-alt">
-                Provide a general location. Do not include private addresses.
-              </span>
+              <span className="label-text-alt">Provide a general location. Do not include private addresses.</span>
             </label>
           </div>
 
@@ -117,7 +112,6 @@ const FileComplaintForm = () => {
   );
 };
 
-
 /**
  * --- Component 2: A single row in the "My Complaints" list ---
  * (This component is unchanged and correct)
@@ -151,19 +145,13 @@ const MyCaseRow = ({ caseId, connectedAddress }: { caseId: bigint; connectedAddr
         <strong>{complaint.id.toString()}</strong>
       </td>
       <td>
-        <span
-          className={`badge ${
-            status === 0 ? "badge-warning" : status === 3 ? "badge-success" : "badge-info"
-          }`}
-        >
+        <span className={`badge ${status === 0 ? "badge-warning" : status === 3 ? "badge-success" : "badge-info"}`}>
           {statusString}
         </span>
       </td>
       <td>{complaint.location}</td>
       <td>
-        {complaint.publicUpdates.length > 0
-          ? complaint.publicUpdates[complaint.publicUpdates.length - 1]
-          : "N/A"}
+        {complaint.publicUpdates.length > 0 ? complaint.publicUpdates[complaint.publicUpdates.length - 1] : "N/A"}
       </td>
       <td>
         <Address address={complaint.assignedPolice} />
@@ -211,14 +199,14 @@ const MyComplaintsList = () => {
                   <td colSpan={5}>Loading my cases...</td>
                 </tr>
               ) : caseIds.length > 0 ? (
-                caseIds.map(id => (
-                  <MyCaseRow key={id.toString()} caseId={id} connectedAddress={connectedAddress} />
-                ))
+                caseIds.map(id => <MyCaseRow key={id.toString()} caseId={id} connectedAddress={connectedAddress} />)
               ) : null}
-              
+
               {!isLoadingCounter && caseIds.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="text-center">You have not filed any complaints yet.</td>
+                  <td colSpan={5} className="text-center">
+                    You have not filed any complaints yet.
+                  </td>
                 </tr>
               )}
             </tbody>
@@ -228,7 +216,6 @@ const MyComplaintsList = () => {
     </div>
   );
 };
-
 
 /**
  * --- MAIN PAGE ---

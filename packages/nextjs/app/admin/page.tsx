@@ -105,29 +105,19 @@ const ResetComplaints = () => {
   );
 };
 
-
 // --- The main admin page ---
 const AdminPage: NextPage = () => {
   return (
     <div className="container mx-auto p-4 flex flex-col items-center gap-8">
       <h1 className="text-3xl font-bold">Governor Admin Panel</h1>
-      
-      <RoleManager
-        roleName="Police"
-        grantFn="grantPoliceRole"
-        revokeFn="revokePoliceRole"
-      />
 
-      <RoleManager
-        roleName="Judicial"
-        grantFn="grantJudicialRole"
-        revokeFn="revokeJudicialRole"
-      />
+      <RoleManager roleName="Police" grantFn="grantPoliceRole" revokeFn="revokePoliceRole" />
+
+      <RoleManager roleName="Judicial" grantFn="grantJudicialRole" revokeFn="revokeJudicialRole" />
 
       {/* --- ADD THE NEW COMPONENT HERE --- */}
       <div className="divider"></div>
       <ResetComplaints />
-
     </div>
   );
 };

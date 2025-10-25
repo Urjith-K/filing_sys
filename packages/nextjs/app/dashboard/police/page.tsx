@@ -3,11 +3,7 @@
 import { useState } from "react";
 import type { NextPage } from "next";
 import { Address } from "~~/components/scaffold-eth";
-import {
-  useScaffoldReadContract,
-  useScaffoldWriteContract,
-  useScaffoldEventHistory,
-} from "~~/hooks/scaffold-eth";
+import { useScaffoldEventHistory, useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 
 // --- Helper to convert status enum to text ---
 const getStatusString = (status: number) => {
@@ -41,12 +37,9 @@ const PoliceCaseRow = ({ caseId }: { caseId: bigint }) => {
   });
 
   // Get hooks for all possible police actions
-  const { writeContractAsync: acknowledgeCase, isPending: isAcknowledging } =
-    useScaffoldWriteContract("YourContract");
-  const { writeContractAsync: addProgressUpdate, isPending: isUpdating } =
-    useScaffoldWriteContract("YourContract");
-  const { writeContractAsync: closeCase, isPending: isClosing } =
-    useScaffoldWriteContract("YourContract");
+  const { writeContractAsync: acknowledgeCase, isPending: isAcknowledging } = useScaffoldWriteContract("YourContract");
+  const { writeContractAsync: addProgressUpdate, isPending: isUpdating } = useScaffoldWriteContract("YourContract");
+  const { writeContractAsync: closeCase, isPending: isClosing } = useScaffoldWriteContract("YourContract");
 
   if (isLoading || !complaint) {
     return (
@@ -110,9 +103,7 @@ const PoliceCaseRow = ({ caseId }: { caseId: bigint }) => {
       </td>
       {/* Status */}
       <td>
-        <span className={`badge ${status === 0 ? "badge-warning" : "badge-info"}`}>
-          {statusString}
-        </span>
+        <span className={`badge ${status === 0 ? "badge-warning" : "badge-info"}`}>{statusString}</span>
       </td>
       {/* Location */}
       <td>{complaint.location}</td>
@@ -122,7 +113,7 @@ const PoliceCaseRow = ({ caseId }: { caseId: bigint }) => {
       </td>
       {/* Details */}
       <td>{complaint.caseDetails}</td>
-      
+
       {/* --- Actions Column --- */}
       <td className="min-w-[400px]">
         <div className="flex flex-col gap-2">
@@ -134,16 +125,11 @@ const PoliceCaseRow = ({ caseId }: { caseId: bigint }) => {
             onChange={e => setUpdateMessage(e.target.value)}
           />
           <div className="flex gap-2">
-            
             {/* --- Button Logic --- */}
 
             {/* If status is "Filed" (0), show "Acknowledge" */}
             {status === 0 && (
-              <button
-                className="btn btn-sm btn-primary"
-                onClick={handleAcknowledge}
-                disabled={isAcknowledging}
-              >
+              <button className="btn btn-sm btn-primary" onClick={handleAcknowledge} disabled={isAcknowledging}>
                 {isAcknowledging ? <span className="loading loading-spinner"></span> : "Acknowledge"}
               </button>
             )}
@@ -158,11 +144,7 @@ const PoliceCaseRow = ({ caseId }: { caseId: bigint }) => {
                 >
                   {isUpdating ? <span className="loading loading-spinner"></span> : "Add Update"}
                 </button>
-                <button
-                  className="btn btn-sm btn-error"
-                  onClick={handleClose}
-                  disabled={isClosing}
-                >
+                <button className="btn btn-sm btn-error" onClick={handleClose} disabled={isClosing}>
                   {isClosing ? <span className="loading loading-spinner"></span> : "Close Case"}
                 </button>
               </>
@@ -217,14 +199,13 @@ const PoliceDashboard: NextPage = () => {
             <tbody>
               {uniqueEvents.length > 0 ? (
                 uniqueEvents.map(event => (
-                  <PoliceCaseRow
-                    key={event.args.caseId.toString()}
-                    caseId={event.args.caseId}
-                  />
+                  <PoliceCaseRow key={event.args.caseId.toString()} caseId={event.args.caseId} />
                 ))
               ) : (
                 <tr>
-                  <td colSpan={6} className="text-center">No cases found.</td>
+                  <td colSpan={6} className="text-center">
+                    No cases found.
+                  </td>
                 </tr>
               )}
             </tbody>
