@@ -83,7 +83,7 @@ const ResetComplaints = () => {
     // Add a simple confirmation for this dangerous action
     if (window.confirm("ARE YOU SURE? This will delete all complaints permanently.")) {
       try {
-        await resetAll({ functionName: "resetAllComplaints", args: [] });
+        await resetAll({ functionName: "resetAllComplaints" });
       } catch (e) {
         console.error("Error resetting complaints:", e);
       }
